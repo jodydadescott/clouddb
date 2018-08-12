@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -x
+
+function main() {
+   cd $(dirname $0)
+   . ./settings || { echo "Failed to load settings"; exit 2; }
+   action=$1
+   [ "$action" == "e" ] && { run internal; exit $?; }
+   [ "$action" == "i" ] && { run internal; exit $?; }
+   echo "Usage: $0 (i | e)"; exit 2; 
+}
+
+function run() { curl "$HOST:$HTTP_PORT/$1/getall"; }
+
+main $@

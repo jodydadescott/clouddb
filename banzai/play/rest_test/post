@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd $(dirname $0)
+. ./settings || { echo "Failed to load settings"; exit 2; }
+
+curl -d "@data.json" -X POST http://$HOST:$PORT/helloworld/create

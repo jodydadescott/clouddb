@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd $(dirname $0)
+. ./settings || { echo "Failed to load settings"; exit 2; }
+
+random=$(openssl rand -base64 20 | sed 's/=//g')
+data="{\"name\":\"$random\",\"value\":\"random\"}"
+
+curl -d $data -X POST http://$HOST:$PORT/helloworld/create

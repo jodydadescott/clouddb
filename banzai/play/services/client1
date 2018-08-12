@@ -1,0 +1,17 @@
+#!/bin/bash
+
+cd $(dirname $0)
+. ../settings || { echo "Failed to load settings"; exit 2; }
+
+export DB_PORT="900${0//[^0-9]/}"
+export HOSTNAME="node${0//[^0-9]/}"
+
+echo "HOSTNAME: $HOSTNAME"
+echo "DB_PORT: $DB_PORT"
+echo "PEERS: $PEERS"
+
+cmd+="java -jar"
+[ -f logging.xml ] && { cmd+=" -Dlogback.configurationFile=file:logging.xml"; }
+cmd+=" $REST_JAR"
+echo "Running->$cmd"
+$cmd

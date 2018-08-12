@@ -1,0 +1,20 @@
+#!/bin/bash
+
+function main() {
+   cd $(dirname $0)
+   . ../settings || { echo "Failed to load settings"; exit 2; }
+   action=$1
+   key=$2
+   [[ $action ]] || { usage; exit 2; }
+   [[ $key ]] || { usage; exit 2; }
+   [ "$action" == "i" ] && { endpoint="internal"; }
+   [ "$action" == "e" ] && { endpoint="external"; }
+   [ "$action" == "internal" ] && { endpoint="internal"; }
+   [ "$action" == "external" ] && { endpoint="external"; }
+   [[ $action ]] || { usage; exit 2; }
+   curl "$HOST:$HTTP_PORT/$endpoint/get?key=$key"
+}
+
+function usage() { echo "$0 (i | e) key"; }
+
+main $@

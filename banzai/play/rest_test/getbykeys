@@ -1,0 +1,11 @@
+!/bin/bash
+
+echo "--------------------------------------------"
+
+curl "localhost:8080/hello/get?key=jodykey"
+
+echo "--------------------------------------------"
+
+curl "localhost:8080/hello/get?key=nancykey"
+
+echo "--------------------------------------------"

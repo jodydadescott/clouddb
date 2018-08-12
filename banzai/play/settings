@@ -1,0 +1,14 @@
+export HOST="127.0.0.1"
+export NAME="dev_test"
+export PASS="pass_test"
+export QUORUM=3
+
+export PEERS="127.0.0.1:9001,127.0.0.1:9002,127.0.0.1:9003"
+
+export REST_JAR=$HOME/workspace/clouddb/banzai/rest/target/clouddb-rest.jar
+export SERVER_JAR=$HOME/workspace/clouddb/banzai/server/target/clouddb-server.jar
+
+function set_label() {
+   export ITERM2_BADGE_AUTO_UPDATE=0
+   printf "\e]1337;SetBadgeFormat=%s\a" $(echo -n $@ | base64)
+}
