@@ -1,0 +1,59 @@
+#!/bin/bash
+################################################################################
+
+# export ROLES="quorum"
+# export ROLES="server"
+
+# export DB_PORT=9001
+# export HOSTNAME=$(hostname)
+# export NAME=
+# export PASS=
+# export QUORUM=3
+# export PEERS="127.0.0.1:9001"
+
+################################################################################
+
+export PID_FILE=/var/run/app.pid
+
+################################################################################
+
+cd $(dirname $0)
+myname=$(basename $0)
+
+function _log() { echo "$myname: $@"; }
+
+function shutdown() {
+   _log "Shutting down"
+   [ -f $PID_FILE ] && {
+      pid=$(<$PID_FILE)
+      _log "Sending kill signal to PID $pid"
+      kill $pid
+   }
+}; trap shutdown 2 3 5 6 15 EXIT
+
+function _run() {
+   _log "Starting Daemon"
+   return=$1
+   cmd+="java -server -jar"
+   [ -f ../etc/logging.xml ] &&
+      cmd+=" -Dlogback.configurationFile=file:../etc/logging.xml"
+   cmd+=" ../lib/app.jar"
+   $cmd
+   rc=$?
+   [ $rc -eq 130 ] && rc=0
+   [ $rc -eq 143 ] && rc=0
+   _log "Daemon existed with code $rc"
+   echo $rc > $return
+}
+
+return=$(mktemp)
+rm -rf $return
+_run $return &
+
+while true; do
+   [ -f $return ] && break
+done
+
+rc=$(<$return)
+_log "Exiting with code $rc"
+exit $rc

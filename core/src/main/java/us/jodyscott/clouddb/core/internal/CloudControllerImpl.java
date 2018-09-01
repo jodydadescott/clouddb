@@ -271,7 +271,7 @@ public class CloudControllerImpl implements CloudController {
 			LOG.trace("Shutting down Membership Listener");
 			executorService.shutdown();
 
-			LOG.error("Unhandled Throwable->{}", t);
+			LOG.error("Unhandled Throwable-> {}", t);
 			throw t;
 
 		} finally {

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+HOST="midware.clouddb.svc.cluster.local"
+
+cd $(dirname $0)
+
+random=$(openssl rand -base64 20 | sed 's/=//g')
+data="{\"name\":\"$random\",\"value\":\"random\"}"
+
+curl -d $data -X POST http://$HOST/helloworld/create

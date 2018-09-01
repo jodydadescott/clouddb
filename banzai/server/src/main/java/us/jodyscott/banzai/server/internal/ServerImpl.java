@@ -1,5 +1,8 @@
 package us.jodyscott.banzai.server.internal;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +17,9 @@ public class ServerImpl implements Server {
 
 	private final CloudController cloudController;
 
-	private Object lockObject = new Object();
+	private volatile boolean isFinal;
 
-	private volatile boolean running;
+	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
 	public ServerImpl(CloudConfig cloudConfig) {
 
@@ -38,17 +41,13 @@ public class ServerImpl implements Server {
 		try {
 			LOG.trace("enter void shutdown()");
 
-			synchronized (lockObject) {
-				if (running) {
-					try {
-						LOG.debug("Stopping CloudController");
-						this.cloudController.shutdown();
-					} catch (Exception e) {
-						LOG.error("Jetty threw an exception while shutting down", e);
-					}
-				} else {
-					LOG.warn("Not running");
-				}
+			if (isFinal) {
+				LOG.warn("Not running, instance is final");
+			} else {
+				isFinal = true;
+				LOG.debug("Stopping CloudController");
+				this.cloudController.shutdown();
+
 			}
 		} finally {
 			LOG.trace("exit void shutdown()");

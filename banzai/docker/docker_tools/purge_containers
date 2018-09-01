@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker ps | grep -v CONT | awk '{print "docker stop "$1}' | bash
+docker ps -a | grep -v CONT | awk '{print "docker rm "$1}' | bash

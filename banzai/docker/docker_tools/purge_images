@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker images | grep -v IMAGE | awk '{print "docker rmi "$3}' | bash

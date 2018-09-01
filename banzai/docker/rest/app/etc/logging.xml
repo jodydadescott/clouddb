@@ -2,7 +2,7 @@
 
 <configuration>
 
-    <property name="LOGS" value="var/logs" />
+    <property name="LOGS" value="/var/logs" />
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
@@ -44,6 +44,29 @@
 			</timeBasedFileNamingAndTriggeringPolicy>
 		</rollingPolicy>
 	</appender>
+
+	<appender name="LOCAL_DISK_HAZELCAST"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOGS}/hazelcast.log</file>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS}/archived/hazelcast.%d{yyyy-MM-dd}.%i.log
+                        </fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<logger name="com.hazelcast" level="info"
+		additivity="false">
+		<appender-ref ref="LOCAL_DISK_HAZELCAST" />
+		<appender-ref ref="STDOUT" />
+	</logger>
 
 	<logger name="us.jodyscott.clouddb" level="info"
 		additivity="false">
